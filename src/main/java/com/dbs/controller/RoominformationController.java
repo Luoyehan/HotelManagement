@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.dbs.po.NetworkManagement;
 import com.dbs.po.Roominformation;
 import com.dbs.service.RoominformationService;
 import com.dbs.util.ReturnData;
@@ -130,13 +131,12 @@ public class RoominformationController {
 	}
 
 	/**
-	 * 修改先判断是否有这个房间
-	 * 如果有就进行修改
+	 * 修改先判断是否有这个房间 如果有就进行修改
 	 * 
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/updateRoominformationByNumberlogin",method=RequestMethod.POST)
+	@RequestMapping(value = "/updateRoominformationByNumberlogin", method = RequestMethod.POST)
 	public @ResponseBody ReturnData updateRoominformationByNumber(HttpServletRequest request) {
 		int r_number = Integer.parseInt(request.getParameter("r_number"));
 		Roominformation roominformation = new Roominformation();
@@ -165,6 +165,39 @@ public class RoominformationController {
 			e.printStackTrace();
 		}
 
+		return returnData;
+	}
+
+	public @ResponseBody ReturnData openNetworkManagement(HttpServletRequest request) {
+		int r_number = Integer.parseInt(request.getParameter("r_number"));
+		ReturnData returnData = new ReturnData();
+		List<Object> list = new ArrayList<Object>();
+		try {
+			Roominformation room1 = roominformationService.findRoominformationByNumber(r_number);
+			while (room1 != null) {
+				NetworkManagement networkManagement = roominformationService.openNetworkManagement(r_number);
+				if(networkManagement.getN_opentime()!=null){
+					list.add(networkManagement.getN_opentime());
+					list.add(networkManagement.getN_roomnumber());
+					list.add(networkManagement.getN_closetime());
+					list.add(networkManagement.getN_customernumbernumber());
+					list.add(networkManagement.getN_serialnumber());
+					returnData.setBody(list);
+	               returnData.setKey("SUCCESS");
+	               returnData.setMsg("此人开通的时间是："+networkManagement.getN_roomnumber());
+				}
+				else {
+					returnData.setKey("FAIL");
+			        returnData.setMsg("不好意思你没有开通网络功能");
+				}
+				//NetworkManagement networkManagement = roominformationService.openNetworkManagement(r_number);
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return returnData;
 	}
 

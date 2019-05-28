@@ -13,15 +13,61 @@
 		t_roominformation(r_number,r_direction,r_tpye,r_equipment,r_state)
 		values(#{r_number},#{r_direction},#{r_tpye},#{r_equipment},#{r_state})
 	</insert>
-<!-- 	删除用户 -->
-	<delete id="deleteRoominformationByNumber" parameterType="int" resultType="int">
+	<!-- 删除用户 -->
+	<delete id="deleteRoominformationByNumber" parameterType="int"
+		resultType="integer">
 		delete from t_roominformation where r_number=#{r_number}
 	</delete>
 	<!-- 修改用户 -->
-    <update id="updateRoominformationByNumber" parameterType="roominformation">
-    update t_roominformation set r_number=#{r_number},r_direction=#{r_direction},
-    r_equipment=#{r_equipment},r_state=#{r_state}
-    where r_number=#{r_number}
-    </update>
+	<update id="updateRoominformationByNumber"
+		parameterType="roominformation">
+		update t_roominformation set
+		r_number=#{r_number},r_direction=#{r_direction},
+		r_equipment=#{r_equipment},r_state=#{r_state}
+		where
+		r_number=#{r_number}
+	</update>
+
+	<select id="openNetworkManagement" parameterType="int"
+		resultMap="resultUserArticleList">
+		select
+		t_roominformation.r_number,
+		t_roominformation.r_direction,
+		t_roominformation.r_tpye,
+		t_roominformation.r_equipment,
+		t_roominformation.r_state,
+		
+		t_networkmanagement.n_serialnumber,
+		t_networkmanagement.n_roomnumber,
+		t_networkmanagement.n_opentime,
+		t_networkmanagement.n_closetime,
+		t_networkmanagement.n_customernumbernumber
+		from
+		t_networkmanagement ,t_roominformation
+		where
+		t_roominformation.r_number=t_networkmanagement.n_roomnumber and
+		t_roominformation.r_number = #{t_roominformation.r_number}
+
+	</select>
+
+	<resultMap type="com.dbs.po.NetworkManagement"
+		id="resultUserArticleList">
+		<id property="r_number" column="r_number"></id>
+		<result property="n_serialnumber" column="n_serialnumber"></result>
+		<result property="n_roomnumber" column="n_roomnumber"></result>
+		<result property="n_opentime" column="n_opentime"></result>
+		<association property="roominformation" javaType="com.dbs.po.Roominformation">
+			<id property="r_number" column="r_number"></id>
+			<result property="r_direction" column="r_direction"></result>
+			<result property="r_tpye" column="r_tpye"></result>
+			<result property="r_equipment" column="r_equipment"></result>
+			<result property="r_state" column="r_state"></result>
+			<result property="n_closetime" column="n_closetime"></result>
+			<result property="n_customernumbernumber" column="n_customernumbernumber"></result>
+		</association>
+	</resultMap>
+
+
+
 
 </mapper>

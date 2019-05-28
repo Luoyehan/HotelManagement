@@ -3,6 +3,13 @@ package com.dbs.po;
 import java.util.Date;
 
 public class NetworkManagement {
+	private Roominformation roominformation;
+	public Roominformation getRoominformation() {
+		return roominformation;
+	}
+	public void setRoominformation(Roominformation roominformation) {
+		this.roominformation = roominformation;
+	}
 	private String n_serialnumber;
 	private int n_roomnumber;
 	private int n_customernumbernumber;

@@ -1,5 +1,6 @@
 package com.dbs.mapper;
 
+import com.dbs.po.NetworkManagement;
 import com.dbs.po.Roominformation;
 
 public interface RoominformationMapper {
@@ -10,7 +11,7 @@ public interface RoominformationMapper {
 	//删除房务信息
 	public int deleteRoominformationByNumber(int r_number)throws Exception;
 	//开通网络处理信息
-	public void openNetworkManagement()throws Exception;
+	public NetworkManagement openNetworkManagement(int r_number)throws Exception;
 	//修改客房服务
 	public void updateRoominformationByNumber(Roominformation roominformation)throws Exception;
 }

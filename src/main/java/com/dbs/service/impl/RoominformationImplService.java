@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dbs.mapper.RoominformationMapper;
+import com.dbs.po.NetworkManagement;
 import com.dbs.po.Roominformation;
 import com.dbs.service.RoominformationService;
 
@@ -32,8 +33,8 @@ public class RoominformationImplService implements RoominformationService {
 	}
 
 	@Override
-	public void openNetworkManagement()throws Exception{
-		this.roominformationMapper.openNetworkManagement();
+	public NetworkManagement openNetworkManagement(int r_number)throws Exception{
+		 return this.roominformationMapper.openNetworkManagement(r_number);
 		// 待定等待查询
 
 	}
