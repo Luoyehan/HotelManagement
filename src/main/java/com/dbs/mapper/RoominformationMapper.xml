@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dbs.mapper.RoominformationMapper">
+
+	<!-- 根据id查询客户id -->
+	<select id="findRoominformationByNumber" parameterType="int"
+		resultType="roominformation">
+		select * from t_roominformation where r_number=#{r_number}
+	</select>
+	<!-- 添加用户 -->
+	<insert id="addRoominformation" parameterType="roominformation">
+		insert into
+		t_roominformation(r_number,r_direction,r_tpye,r_equipment,r_state)
+		values(#{r_number},#{r_direction},#{r_tpye},#{r_equipment},#{r_state})
+	</insert>
+<!-- 	删除用户 -->
+	<delete id="deleteRoominformationByNumber" parameterType="int" resultType="int">
+		delete from t_roominformation where r_number=#{r_number}
+	</delete>
+	<!-- 修改用户 -->
+    <update id="updateRoominformationByNumber" parameterType="roominformation">
+    update t_roominformation set r_number=#{r_number},r_direction=#{r_direction},
+    r_equipment=#{r_equipment},r_state=#{r_state}
+    where r_number=#{r_number}
+    </update>
+
+</mapper>
