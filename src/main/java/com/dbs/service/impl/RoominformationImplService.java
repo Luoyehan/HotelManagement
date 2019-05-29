@@ -25,7 +25,6 @@ public class RoominformationImplService implements RoominformationService {
 		return this.roominformationMapper.findRoominformationByNumber(r_number);
 
 	}
-
 	@Override
 	public int deleteRoominformationByNumber(int r_number)throws Exception {
 	 return	this.roominformationMapper.deleteRoominformationByNumber(r_number);
@@ -35,10 +34,8 @@ public class RoominformationImplService implements RoominformationService {
 	@Override
 	public NetworkManagement openNetworkManagement(int r_number)throws Exception{
 		 return this.roominformationMapper.openNetworkManagement(r_number);
-		// 待定等待查询
 
 	}
-
 	@Override
 	public void updateRoominformationByNumber(Roominformation roominformation) throws Exception {
 	  this.roominformationMapper.updateRoominformationByNumber(roominformation);

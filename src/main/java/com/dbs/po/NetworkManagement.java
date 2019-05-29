@@ -4,17 +4,18 @@ import java.util.Date;
 
 public class NetworkManagement {
 	private Roominformation roominformation;
+
+	private String n_serialnumber;
+	private int n_roomnumber;
+	private int n_customernumbernumber;
+	private Date n_opentime;
+	private Date n_closetime;
 	public Roominformation getRoominformation() {
 		return roominformation;
 	}
 	public void setRoominformation(Roominformation roominformation) {
 		this.roominformation = roominformation;
 	}
-	private String n_serialnumber;
-	private int n_roomnumber;
-	private int n_customernumbernumber;
-	private Date n_opentime;
-	private Date n_closetime;
 	public String getN_serialnumber() {
 		return n_serialnumber;
 	}

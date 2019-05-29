@@ -37,31 +37,28 @@ public class RoominformationController {
 	public @ResponseBody ReturnData insertroominformation(HttpServletResponse response, HttpServletRequest request)
 			throws Exception {
 		ReturnData returnData = new ReturnData();
+		int r_number = Integer.parseInt(request.getParameter("r_number"));
 		Roominformation roominformation = new Roominformation();
-		roominformation.setR_number(Integer.parseInt(request.getParameter("r_number")));
+		Roominformation roominformation1 = new Roominformation();
+		roominformation.setR_number(r_number);
 		roominformation.setR_direction(request.getParameter("r_direction"));
 		roominformation.setR_tpye(request.getParameter("r_tpye"));
 		roominformation.setR_equipment(Integer.parseInt(request.getParameter("r_equipment")));
 		roominformation.setR_state(Integer.parseInt(request.getParameter("r_state")));
 		roominformationService.addRoominformation(roominformation);
+		roominformation1 = roominformationService.findRoominformationByNumber(r_number);
 		List<Object> listroominformation = new ArrayList<Object>();
-		// 插入值添加到list里面
 		listroominformation.add(roominformation);
-		returnData.setBody(listroominformation);
+		if (roominformation1.getR_number() > 0) {
+			returnData.setBody(listroominformation);
+			returnData.setKey("SUCCESS");
+			returnData.setMsg("客房信息添加成功");
+		} else {
+			returnData.setKey("FAIL");
+			returnData.setMsg("客房信息添加失败");
+			System.out.println();
 
-		try {
-			if (returnData.getBody() != null) {
-				returnData.setKey("SUCCESS");
-				returnData.setMsg("客房信息添加成功");
-			} else {
-				returnData.setKey("FAIL");
-				returnData.setMsg("客房信息添加失败");
-				System.out.println();
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
-
 		return returnData;
 	}
 
@@ -72,34 +69,32 @@ public class RoominformationController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "findRoominformationByNumberlogin", method = RequestMethod.POST)
-	public @ResponseBody ReturnData findRoominformationByNumber(HttpServletRequest request) throws Exception {
-		Roominformation roominformation = new Roominformation();
+	@RequestMapping(value = "findRoominformationByNumber", method = RequestMethod.POST)
+	public @ResponseBody ReturnData findRoominformationByNumber(HttpServletResponse response,
+			HttpServletRequest request) throws Exception {
+		// Roominformation roominformation = new Roominformation();
 		ReturnData returnData = new ReturnData();
 		int r_number = Integer.parseInt(request.getParameter("r_number"));
 		Roominformation room1 = roominformationService.findRoominformationByNumber(r_number);
-		while (room1 != null) {
+		if (room1 != null) {
 			List<Object> list = new ArrayList<Object>();
-			roominformation.setR_direction(room1.getR_direction());
-			roominformation.setR_equipment(room1.getR_equipment());
-			roominformation.setR_number(room1.getR_number());
-			roominformation.setR_state(room1.getR_state());
-			roominformation.setR_tpye(room1.getR_tpye());
-			list.add(roominformation);
+			/**
+			 * roominformation.setR_direction(room1.getR_direction());
+			 * roominformation.setR_equipment(room1.getR_equipment());
+			 * roominformation.setR_number(room1.getR_number());
+			 * roominformation.setR_state(room1.getR_state());
+			 * roominformation.setR_tpye(room1.getR_tpye());
+			 */
+			returnData.setKey("SUCCESS");
+			returnData.setMsg("查询信息添加成功");
+			list.add(room1);
 			returnData.setBody(list);
+		} else {
+			returnData.setKey("FAIL");
+			returnData.setMsg("查询客房信息添加失败");
+
 		}
-		try {
-			if (returnData.getBody() != null) {
-				returnData.setKey("SUCCESS");
-				returnData.setMsg("查询信息添加成功");
-			} else {
-				returnData.setKey("FAIL");
-				returnData.setMsg("查询客房信息添加失败");
-				System.out.println();
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+
 		return returnData;
 	}
 
@@ -111,17 +106,18 @@ public class RoominformationController {
 	 * @return
 	 */
 	@RequestMapping(value = "deleteRoominformationByNumberlogin", method = RequestMethod.POST)
-	public @ResponseBody ReturnData deleteRoominformationByNumber(HttpServletRequest request) {
+	public @ResponseBody ReturnData deleteRoominformationByNumber(HttpServletResponse response,
+			HttpServletRequest request) {
 		ReturnData returnData = new ReturnData();
 		int r_number = Integer.parseInt(request.getParameter("r_number"));
 		try {
 			int deletenumber = roominformationService.deleteRoominformationByNumber(r_number);
 			if (deletenumber > 0) {
 				returnData.setKey("SUCCESS");
-				returnData.setKey("你已经删除了编号为" + r_number + "的房间");
+				returnData.setMsg("你已经删除了编号为  " + r_number + "的房间");
 			} else {
 				returnData.setKey("FAIL");
-				returnData.setKey("对不起没有这个" + r_number + "的房间，无法进行删除");
+				returnData.setMsg("对不起没有这个  " + r_number + "  的房间，无法进行删除");
 			}
 		} catch (Exception e) {
 
@@ -137,67 +133,88 @@ public class RoominformationController {
 	 * @return
 	 */
 	@RequestMapping(value = "/updateRoominformationByNumberlogin", method = RequestMethod.POST)
-	public @ResponseBody ReturnData updateRoominformationByNumber(HttpServletRequest request) {
+	public @ResponseBody ReturnData updateRoominformationByNumber(HttpServletResponse response,
+			HttpServletRequest request) {
 		int r_number = Integer.parseInt(request.getParameter("r_number"));
 		Roominformation roominformation = new Roominformation();
 		ReturnData returnData = new ReturnData();
 		List<Object> list = new ArrayList<Object>();
-
-		Roominformation room1;
+		Roominformation room1 = null;
 		try {
 			room1 = roominformationService.findRoominformationByNumber(r_number);
-			while (room1 != null) {
-				roominformation.setR_number(r_number);
-				roominformation.setR_direction(request.getParameter("r_direction"));
-				roominformation.setR_equipment(Integer.parseInt(request.getParameter("r_equipment")));
-				roominformation.setR_state(Integer.parseInt(request.getParameter("r_state")));
-				roominformation.setR_tpye(request.getParameter("r_tpye"));
-				roominformationService.updateRoominformationByNumber(roominformation);
-				list.add(roominformation);
-				returnData.setBody(list);
-				returnData.setKey("SUCCESS");
-				returnData.setMsg("修改" + r_number + "信息成功");
-			}
-			returnData.setKey("FAIL");
-			returnData.setMsg("修改" + r_number + "信息失败没有这个房间");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if (room1 != null) {
+			roominformation.setR_number(r_number);
+			roominformation.setR_direction(request.getParameter("r_direction"));
+			roominformation.setR_equipment(Integer.parseInt(request.getParameter("r_equipment")));
+			roominformation.setR_state(Integer.parseInt(request.getParameter("r_state")));
+			roominformation.setR_tpye(request.getParameter("r_tpye"));
+			try {
+				roominformationService.updateRoominformationByNumber(roominformation);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			list.add(roominformation);
+
+			returnData.setBody(list);
+			returnData.setKey("SUCCESS");
+			returnData.setMsg("修改" + r_number + "的信息成功");
+		} else {
+			returnData.setKey("FAIL");
+			returnData.setMsg("修改" + r_number + "信息失败没有这个房间");
 		}
 
 		return returnData;
-	}
 
-	public @ResponseBody ReturnData openNetworkManagement(HttpServletRequest request) {
+	}
+/**
+ * 判断是否开通网络管理
+ * @param response
+ * @param request
+ * @return
+ */
+	@RequestMapping(value = "/openNetworkManagement", method = RequestMethod.POST)
+	public @ResponseBody ReturnData openNetworkManagement(HttpServletResponse response, HttpServletRequest request) {
 		int r_number = Integer.parseInt(request.getParameter("r_number"));
+		System.out.println(r_number);
 		ReturnData returnData = new ReturnData();
 		List<Object> list = new ArrayList<Object>();
+		Roominformation room1 = null;
 		try {
-			Roominformation room1 = roominformationService.findRoominformationByNumber(r_number);
-			while (room1 != null) {
-				NetworkManagement networkManagement = roominformationService.openNetworkManagement(r_number);
-				if(networkManagement.getN_opentime()!=null){
-					list.add(networkManagement.getN_opentime());
-					list.add(networkManagement.getN_roomnumber());
-					list.add(networkManagement.getN_closetime());
-					list.add(networkManagement.getN_customernumbernumber());
-					list.add(networkManagement.getN_serialnumber());
-					returnData.setBody(list);
-	               returnData.setKey("SUCCESS");
-	               returnData.setMsg("此人开通的时间是："+networkManagement.getN_roomnumber());
-				}
-				else {
-					returnData.setKey("FAIL");
-			        returnData.setMsg("不好意思你没有开通网络功能");
-				}
-				//NetworkManagement networkManagement = roominformationService.openNetworkManagement(r_number);
-				
-			}
+			room1 = roominformationService.findRoominformationByNumber(r_number);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	
+			if (room1 != null) {
+				// 进行多表连接
+				System.out.println(room1.getR_state());
+				NetworkManagement networkManagement = null;
+				try {
+					networkManagement = roominformationService.openNetworkManagement(r_number);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println(networkManagement.getN_opentime());
+				if (networkManagement.getN_opentime() != null) {
+					list.add(networkManagement);
+					returnData.setBody(list);
+					returnData.setKey("SUCCESS");
+					returnData.setMsg("此人开通的时间是：" + networkManagement.getN_roomnumber());
+				} 
+			}
+			else {
+				System.out.println("===============");
+				returnData.setKey("FAIL");
+				returnData.setMsg("不好意思你没有开通网络功能");
+			}
 		
+
 		return returnData;
 	}
 

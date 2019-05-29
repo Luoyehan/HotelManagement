@@ -4,18 +4,17 @@
 
 	<!-- 根据id查询客户id -->
 	<select id="findRoominformationByNumber" parameterType="int"
-		resultType="roominformation">
+		resultType="roominformation" >
 		select * from t_roominformation where r_number=#{r_number}
 	</select>
 	<!-- 添加用户 -->
-	<insert id="addRoominformation" parameterType="roominformation">
+	<insert id="addRoominformation" parameterType="roominformation"  >
 		insert into
 		t_roominformation(r_number,r_direction,r_tpye,r_equipment,r_state)
 		values(#{r_number},#{r_direction},#{r_tpye},#{r_equipment},#{r_state})
 	</insert>
 	<!-- 删除用户 -->
-	<delete id="deleteRoominformationByNumber" parameterType="int"
-		resultType="integer">
+	<delete id="deleteRoominformationByNumber" parameterType="int"  >
 		delete from t_roominformation where r_number=#{r_number}
 	</delete>
 	<!-- 修改用户 -->
@@ -28,7 +27,8 @@
 		r_number=#{r_number}
 	</update>
 
-	<select id="openNetworkManagement" parameterType="int"
+<!-- 是否开通网络管理 -->
+	<select id="openNetworkManagement" parameterType="int" 
 		resultMap="resultUserArticleList">
 		select
 		t_roominformation.r_number,
@@ -46,24 +46,25 @@
 		t_networkmanagement ,t_roominformation
 		where
 		t_roominformation.r_number=t_networkmanagement.n_roomnumber and
-		t_roominformation.r_number = #{t_roominformation.r_number}
+		t_roominformation.r_number = #{r_number}
 
 	</select>
 
 	<resultMap type="com.dbs.po.NetworkManagement"
 		id="resultUserArticleList">
-		<id property="r_number" column="r_number"></id>
+		<id property="n_roomnumber" column="n_roomnumber"></id>
 		<result property="n_serialnumber" column="n_serialnumber"></result>
 		<result property="n_roomnumber" column="n_roomnumber"></result>
 		<result property="n_opentime" column="n_opentime"></result>
+		<result property="n_closetime" column="n_closetime"></result>
+		<result property="n_customernumbernumber" column="n_customernumbernumber"></result>
 		<association property="roominformation" javaType="com.dbs.po.Roominformation">
 			<id property="r_number" column="r_number"></id>
 			<result property="r_direction" column="r_direction"></result>
 			<result property="r_tpye" column="r_tpye"></result>
 			<result property="r_equipment" column="r_equipment"></result>
 			<result property="r_state" column="r_state"></result>
-			<result property="n_closetime" column="n_closetime"></result>
-			<result property="n_customernumbernumber" column="n_customernumbernumber"></result>
+			
 		</association>
 	</resultMap>
 
